@@ -31,7 +31,11 @@ Create application
     ```
       fn init --runtime python list-compartments
     ```
-    Enter the directory.
+    Enter the directory, create a new __init__.py file so the directory can be recognized as a package by Python.
+
+    ```
+    touch __init__.py
+    ```
 
   #### Create an Application that is connected to Oracle Functions
     ```
