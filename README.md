@@ -24,6 +24,7 @@ fn ls apps
 
 ### (Optional) Have a config file in the ~/.oci directory
   If you would like to call the function from the command line you will need a valid config file.
+
   If you do not have one, go [here](https://preview.oci.oraclecorp.com/iaas/Content/Functions/Tasks/functionsconfigureocicli.htm?tocpath=Services%7CFunctions%7CPreparing%20for%20Oracle%20Functions%7CConfiguring%20Your%20Client%20Environment%20for%20Function%20Development%7C_____2)
 
 Create application
@@ -47,7 +48,7 @@ Create application
   ```
   fn create app <app-name> --annotation oracle.com/oci/subnetIds='["<subnet-ocid>"]'
   ```
-  You can find the subnet-ocid by logging on to cloud.oracle.com, navigating to Core Infrastructure > Networking > Virtual Cloud Networks. Make sure you are in the correct Region and Compartment, click on your VNC and select the subnet you wish to use.
+  You can find the subnet-ocid by logging on to [cloud.oracle.com](https://cloud.oracle.com/en_US/sign-in), navigating to Core Infrastructure > Networking > Virtual Cloud Networks. Make sure you are in the correct Region and Compartment, click on your VNC and select the subnet you wish to use.
 
   e.g.
   ```
@@ -65,7 +66,7 @@ Writing the Function
 
 ### Open func.py
   Update the imports so that you contain the following.
-  ```
+  ```python
   import io
   import json
   import sys
@@ -79,64 +80,65 @@ Writing the Function
   ```
 
   By calling
-  ```
+  ```python
   sys.path.append(".")
   ```
    the Python interpreter is able to import the two Python modules (rp.py, functions_client) in your directory that you downloaded earlier.
 
 ### The Handler method
   This is what is called when the function is invoked by Oracle Functions, delete what is given from the boilerplate and update it to contain the following:
-  ```
-        provider = rp.ResourcePrincipalProvider() # initialized provider here
-        resp = do(provider)
-        return response.Response(
-            ctx, response_data=json.dumps(resp),
-            headers={"Content-Type": "application/json"}
-        )
+  ```python
+  def handler(ctx, data: io.BytesIO=None):
+      provider = rp.ResourcePrincipalProvider() # initialized provider here
+      resp = do(provider)
+      return response.Response(
+          ctx, response_data=json.dumps(resp),
+          headers={"Content-Type": "application/json"}
+      )
   ```
 
 ### The do method
   Create the following method.
-  ```
+  ```python
   def do(provider):
   ```
   This is where we'll put the bulk of our code that will connect to OCI and return the list of compartments in our tenancy.
+  ```python
+    client = oci.identity.IdentityClient(provider.config, signer=provider.signer)
+    # OCI API for managing users, groups, compartments, and policies.
+
+    try:
+        # Returns a list of all compartments and subcompartments in the tenancy (root compartment)
+        compartments = client.list_compartments(provider.tenancy, compartment_id_in_subtree=True, access_level='ANY')
+
+        # Create a list that holds a list of the compartments id and name next to each other.
+        # i.e. [ [1234, root], [5678, child]]
+        compartments = [[c.id, c.name] for c in compartments.data]
+    except Exception as e:
+        compartments = str(e)
+
+    resp = {
+             "compartments": compartments,
+            }
+
+    return resp
   ```
-        client = oci.identity.IdentityClient(provider.config, signer=provider.signer)
-          # OCI API for managing users, groups, compartments, and policies.
-
-          try:
-              # Returns a list of all compartments and subcompartments in the tenancy (root compartment)
-              compartments = client.list_compartments(provider.tenancy, compartment_id_in_subtree=True, access_level='ANY')
-
-              # Create a list that holds a list of the compartments id and name next to each other.
-              # e.g. [ [1234, root], [5678, child]]
-              compartments = [[c.id, c.name] for c in compartments.data]
-
-          except Exception as e:
-              compartments = str(e)
-
-          resp = {
-                   "compartments": compartments,
-                  }
-
-          return resp
-  ```
-  Here we are creating an [IdentityClient](https://oracle-cloud-infrastructure-python-sdk.readthedocs.io/en/latest/api/identity/client/oci.identity.IdentityClient.html?highlight=IdentityClient) from the Python SDK, which allows us to connect to OCI with the provider's data we get from Resource Principles and it allows us to make a call to identity services for information on our compartments.
+  Here we are creating an [IdentityClient](https://oracle-cloud-infrastructure-python-sdk.readthedocs.io/en/latest/api/identity/client/oci.identity.IdentityClient.html?highlight=IdentityClient) from the [OCI Python SDK](https://oracle-cloud-infrastructure-python-sdk.readthedocs.io/en/latest/index.html), which allows us to connect to OCI with the provider's data we get from Resource Principles and it allows us to make a call to identity services for information on our compartments.
 
 ### Command Line Usage
   If you want to be able to invoke this function from the command line, copy and paste this at the bottom of your code.
-  ```
-        def main():
-          # If run from the command-line, fake up the provider by using stock user credentials
-          provider = rp.MockResourcePrincipalProvider()
-          resp = do(provider)
-          print((resp))
-          print(json.dumps(resp))
+  ```python
+  def main():
+      # If run from the command-line, fake up the provider by using stock user credentials
+      provider = rp.MockResourcePrincipalProvider()
+      resp = do(provider)
+      print((resp))
+      print(json.dumps(resp))
 
 
-        if __name__ == '__main__':
-          main()
+  if __name__ == '__main__':
+      main()
+
   ```
 Test
 ----
