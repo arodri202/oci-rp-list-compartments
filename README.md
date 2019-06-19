@@ -8,6 +8,7 @@ This function uses Resource Principles to securely receive information about the
 Pre-requisites:
 ---------------
   Start by making sure all of your policies are correct from this [guide](https://preview.oci.oraclecorp.com/iaas/Content/Functions/Tasks/functionscreatingpolicies.htm?tocpath=Services%7CFunctions%7CPreparing%20for%20Oracle%20Functions%7CConfiguring%20Your%20Tenancy%20for%20Function%20Development%7C_____4)
+
   Download [rp.py](https://github.com/arodri202/oci-rp-list-compartments/blob/master/rp.py) and [functions_client.py](https://github.com/arodri202/oci-rp-list-compartments/blob/master/functions_client.py)
 
   Have [Fn CLI setup with Oracle Functions](https://preview.oci.oraclecorp.com/iaas/Content/Functions/Tasks/functionsconfiguringclient.htm?tocpath=Services%7CFunctions%7CPreparing%20for%20Oracle%20Functions%7CConfiguring%20Your%20Client%20Environment%20for%20Function%20Development%7C_____0)
@@ -16,7 +17,10 @@ Pre-requisites:
   ```
   fn use context <your context name>
   ```
-Check using fn ls apps
+Check using
+```
+fn ls apps
+```
 
 ### (Optional) Have a config file in the ~/.oci directory
   If you would like to call the function from the command line you will need a valid config file.
@@ -39,6 +43,7 @@ Create application
   ```
 
 ### Create an Application that is connected to Oracle Functions
+
   ```
   fn create app <app-name> --annotation oracle.com/oci/subnetIds='["<subnet-ocid>"]'
   ```
@@ -54,8 +59,8 @@ Writing the Function
 ### Requirements
   Update your requirements.txt file to contain the following:
   ```
-    fdk
-    oci-cli
+  fdk
+  oci-cli
   ```
 
 ### Open func.py
@@ -73,7 +78,11 @@ Writing the Function
   import functions_client
   ```
 
-  By calling "sys.path.append(".")" the Python interpreter is able to import the two Python modules (rp.py, functions_client) in your directory that you downloaded earlier.
+  By calling
+  ```
+  sys.path.append(".")
+  ```
+   the Python interpreter is able to import the two Python modules (rp.py, functions_client) in your directory that you downloaded earlier.
 
 ### The Handler method
   This is what is called when the function is invoked by Oracle Functions, delete what is given from the boilerplate and update it to contain the following:
