@@ -123,7 +123,7 @@ Writing the Function
 
     return resp
   ```
-  Here we are creating an [IdentityClient](https://oracle-cloud-infrastructure-python-sdk.readthedocs.io/en/latest/api/identity/client/oci.identity.IdentityClient.html?highlight=IdentityClient) from the [OCI Python SDK](https://oracle-cloud-infrastructure-python-sdk.readthedocs.io/en/latest/index.html), which allows us to connect to OCI with the provider's data we get from Resource Principles and it allows us to make a call to identity services for information on our compartments.
+  Here we are creating an [IdentityClient](https://oracle-cloud-infrastructure-python-sdk.readthedocs.io/en/latest/api/identity/client/oci.identity.IdentityClient.html) from the [OCI Python SDK](https://oracle-cloud-infrastructure-python-sdk.readthedocs.io/en/latest/index.html), which allows us to connect to OCI with the provider's data we get from Resource Principles and it allows us to make a call to identity services for information on our compartments.
 
 ### Command Line Usage
   If you want to be able to invoke this function from the command line, copy and paste this at the bottom of your code.
