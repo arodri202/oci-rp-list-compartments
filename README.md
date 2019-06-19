@@ -6,7 +6,7 @@ This function uses Resource Principles to securely receive information about the
 
 
 Pre-requisites:
-===============
+---------------
     Start by making sure all of your policies are correct from this [guide](https://preview.oci.oraclecorp.com/iaas/Content/Functions/Tasks/functionscreatingpolicies.htm?tocpath=Services%7CFunctions%7CPreparing%20for%20Oracle%20Functions%7CConfiguring%20Your%20Tenancy%20for%20Function%20Development%7C_____4)
     Download [rp.py] and [functions_client.py]
 
@@ -22,7 +22,7 @@ Pre-requisites:
     If you do not have one, go [here](https://preview.oci.oraclecorp.com/iaas/Content/Functions/Tasks/functionsconfigureocicli.htm?tocpath=Services%7CFunctions%7CPreparing%20for%20Oracle%20Functions%7CConfiguring%20Your%20Client%20Environment%20for%20Function%20Development%7C_____2)
 
 Create application
-==================
+------------------
   Get the python boilerplate by running:
     ```
       fn init --runtime python <function-name>
@@ -51,7 +51,7 @@ Create application
     ```
 
 Writing the Function
-====================
+------------------
   #### Requirements
     Update your requirements.txt file to contain the following:
       ```
@@ -132,7 +132,7 @@ Writing the Function
           main()
       ```
 Test
-====
+----
   #### Deploy the function using
     ```
       fn -v deploy --app <your app name>
