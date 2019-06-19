@@ -7,94 +7,92 @@ This function uses Resource Principles to securely receive information about the
 
 Pre-requisites:
 ---------------
-    Start by making sure all of your policies are correct from this [guide](https://preview.oci.oraclecorp.com/iaas/Content/Functions/Tasks/functionscreatingpolicies.htm?tocpath=Services%7CFunctions%7CPreparing%20for%20Oracle%20Functions%7CConfiguring%20Your%20Tenancy%20for%20Function%20Development%7C_____4)
-    Download [rp.py] and [functions_client.py]
+  Start by making sure all of your policies are correct from this [guide](https://preview.oci.oraclecorp.com/iaas/Content/Functions/Tasks/functionscreatingpolicies.htm?tocpath=Services%7CFunctions%7CPreparing%20for%20Oracle%20Functions%7CConfiguring%20Your%20Tenancy%20for%20Function%20Development%7C_____4)
+  Download [rp.py] and [functions_client.py]
 
   Have [Fn CLI setup with Oracle Functions](https://preview.oci.oraclecorp.com/iaas/Content/Functions/Tasks/functionsconfiguringclient.htm?tocpath=Services%7CFunctions%7CPreparing%20for%20Oracle%20Functions%7CConfiguring%20Your%20Client%20Environment%20for%20Function%20Development%7C_____0)
-    ### Switch to correct Context
-      ```
-        fn use context <your context name>
-      ```
-      Check using fn ls apps
 
-  ### (Optional) Have a config file in the ~/.oci directory
-    If you would like to call the function from the command line you will need a valid config file.
-    If you do not have one, go [here](https://preview.oci.oraclecorp.com/iaas/Content/Functions/Tasks/functionsconfigureocicli.htm?tocpath=Services%7CFunctions%7CPreparing%20for%20Oracle%20Functions%7CConfiguring%20Your%20Client%20Environment%20for%20Function%20Development%7C_____2)
+### Switch to correct Context
+  ```
+  fn use context <your context name>
+  ```
+Check using fn ls apps
+
+### (Optional) Have a config file in the ~/.oci directory
+  If you would like to call the function from the command line you will need a valid config file.
+  If you do not have one, go [here](https://preview.oci.oraclecorp.com/iaas/Content/Functions/Tasks/functionsconfigureocicli.htm?tocpath=Services%7CFunctions%7CPreparing%20for%20Oracle%20Functions%7CConfiguring%20Your%20Client%20Environment%20for%20Function%20Development%7C_____2)
 
 Create application
 ------------------
   Get the python boilerplate by running:
-    ```
-      fn init --runtime python <function-name>
-    ```
-    e.g.
-    ```
-      fn init --runtime python list-compartments
-    ```
-    Enter the directory, create a new __init__.py file so the directory can be recognized as a package by Python.
+  ```
+  fn init --runtime python <function-name>
+  ```
+  e.g.
+  ```
+  fn init --runtime python list-compartments
+  ```
+  Enter the directory, create a new __init__.py file so the directory can be recognized as a package by Python.
 
-    ```
-    touch __init__.py
-    ```
+  ```
+  touch __init__.py
+  ```
 
-  #### Create an Application that is connected to Oracle Functions
-    ```
-      fn create app <app-name> --annotation oracle.com/oci/subnetIds='["<subnet-ocid>"]'
-    ```
-        You can find the subnet-ocid by logging on to cloud.oracle.com, navigating to
-        Core Infrastructure > Networking > Virtual Cloud Networks. Make sure you are in
-        the correct Region and Compartment, click on your VNC and select the subnet you wish to use.
+#### Create an Application that is connected to Oracle Functions
+  ```
+    fn create app <app-name> --annotation oracle.com/oci/subnetIds='["<subnet-ocid>"]'
+  ```
+  You can find the subnet-ocid by logging on to cloud.oracle.com, navigating to Core Infrastructure > Networking > Virtual Cloud Networks. Make sure you are in the correct Region and Compartment, click on your VNC and select the subnet you wish to use.
 
-    e.g.
-    ```
-      fn create app resource-principal --annotation oracle.com/oci/subnetIds=["ocid1.subnet.oc1.phx.aaaaaaaacnh..."]'
-    ```
+  e.g.
+  ```
+  fn create app resource-principal --annotation oracle.com/oci/subnetIds=["ocid1.subnet.oc1.phx.aaaaaaaacnh..."]'
+  ```
 
 Writing the Function
 ------------------
-  #### Requirements
-    Update your requirements.txt file to contain the following:
-      ```
-        fdk
-        oci-cli
-      ```
+#### Requirements
+  Update your requirements.txt file to contain the following:
+  ```
+    fdk
+    oci-cli
+  ```
 
-  #### Open func.py
-    Update the imports so that you contain the following.
-      ```
-        import io
-        import json
-        import sys
-        import importlib
-        from fdk import response
+#### Open func.py
+  Update the imports so that you contain the following.
+  ```
+  import io
+  import json
+  import sys
+  import importlib
+  from fdk import response
 
-        import oci.identity
-        sys.path.append(".")
-        import rp
-        import functions_client
-      ```
+  import oci.identity
+  sys.path.append(".")
+  import rp
+  import functions_client
+  ```
 
-        By calling "sys.path.append(".")" the Python interpreter is able to import
-        the two Python modules (rp.py, functions_client) in your directory that you downloaded earlier.
+  By calling "sys.path.append(".")" the Python interpreter is able to import the two Python modules (rp.py, functions_client) in your directory that you downloaded earlier.
 
-
-    #### The Handler method
-      this is what is called when the function is invoked by Oracle Functions, delete what is given from the boilerplate and update it to contain the following:
-      ```
+#### The Handler method
+  This is what is called when the function is invoked by Oracle Functions, delete what is given from the boilerplate and update it to contain the following:
+  ```
         provider = rp.ResourcePrincipalProvider() # initialized provider here
         resp = do(provider)
         return response.Response(
             ctx, response_data=json.dumps(resp),
             headers={"Content-Type": "application/json"}
         )
-      ```
-    #### The do method
-      Create the following method.
-      ```
+  ```
+
+#### The do method
+  Create the following method.
+  ```
         def do(provider):
-      ```
-      This is where we'll put the bulk of our code that will connect to OCI and return the list of compartments in our tenancy.
-      ```
+  ```
+  This is where we'll put the bulk of our code that will connect to OCI and return the list of compartments in our tenancy.
+  ```
         client = oci.identity.IdentityClient(provider.config, signer=provider.signer)
           # OCI API for managing users, groups, compartments, and policies.
 
@@ -114,12 +112,12 @@ Writing the Function
                   }
 
           return resp
-      ```
-      Here we are creating an [IdentityClient](https://oracle-cloud-infrastructure-python-sdk.readthedocs.io/en/latest/api/identity/client/oci.identity.IdentityClient.html?highlight=IdentityClient) from the Python SDK, which allows us to connect to OCI with the provider's data we get from Resource Principles and it allows us to make a call to identity services for information on our compartments.
+  ```
+  Here we are creating an [IdentityClient](https://oracle-cloud-infrastructure-python-sdk.readthedocs.io/en/latest/api/identity/client/oci.identity.IdentityClient.html?highlight=IdentityClient) from the Python SDK, which allows us to connect to OCI with the provider's data we get from Resource Principles and it allows us to make a call to identity services for information on our compartments.
 
-    ### Command Line Usage
-      If you want to be able to invoke this function from the command line, copy and paste this at the bottom of your code.
-      ```
+### Command Line Usage
+  If you want to be able to invoke this function from the command line, copy and paste this at the bottom of your code.
+  ```
         def main():
           # If run from the command-line, fake up the provider by using stock user credentials
           provider = rp.MockResourcePrincipalProvider()
@@ -130,23 +128,24 @@ Writing the Function
 
         if __name__ == '__main__':
           main()
-      ```
+  ```
 Test
 ----
-  #### Deploy the function using
-    ```
+#### Deploy the function using
+  ```
       fn -v deploy --app <your app name>
-    ```
+  ```
     e.g.
-    ```
+  ```
     fn -v deploy --app resource-principles
-    ```
-  #### Invoke the function
-    ```
+  ```
+
+#### Invoke the function
+  ```
       fn invoke <your app name> <your function name>
-    ```
-    e.g.
-    ```
+  ```
+  e.g.
+  ```
       fn invoke resource-principles list-compartments
-    ```
-    Upon success, you should see all of the compartments in your tenancy appear in your terminal.
+  ```
+  Upon success, you should see all of the compartments in your tenancy appear in your terminal.
