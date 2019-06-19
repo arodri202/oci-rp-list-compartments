@@ -142,19 +142,19 @@ Test
 ----
 ### Deploy the function using
   ```
-      fn -v deploy --app <your app name>
+  fn -v deploy --app <your app name>
   ```
     e.g.
   ```
-    fn -v deploy --app resource-principles
+  fn -v deploy --app resource-principles
   ```
 
 ### Invoke the function
   ```
-      fn invoke <your app name> <your function name>
+  fn invoke <your app name> <your function name>
   ```
   e.g.
   ```
-      fn invoke resource-principles list-compartments
+  fn invoke resource-principles list-compartments
   ```
   Upon success, you should see all of the compartments in your tenancy appear in your terminal.
