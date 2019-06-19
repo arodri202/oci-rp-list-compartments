@@ -144,7 +144,9 @@ Test
   ```
   fn -v deploy --app <your app name>
   ```
-    e.g.
+
+  e.g.
+
   ```
   fn -v deploy --app resource-principles
   ```
@@ -153,7 +155,9 @@ Test
   ```
   fn invoke <your app name> <your function name>
   ```
+
   e.g.
+
   ```
   fn invoke resource-principles list-compartments
   ```
