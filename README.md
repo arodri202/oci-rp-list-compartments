@@ -4,7 +4,7 @@ This function uses Resource Principles to securely receive information about the
 
   Uses the [OCI Python SDK](https://oracle-cloud-infrastructure-python-sdk.readthedocs.io/en/latest/index.html) to create a client that receive user information when called in the OCI or a valid config file exists.
 
-  As you make your way through this tutorial, look out for this icon. ![user input icon]() Whenever you see it, it's time for you to perform an action.
+  As you make your way through this tutorial, look out for this icon. ![user input icon](https://raw.githubusercontent.com/arodri202/oci-rp-list-compartments/master/images/userinput.png) Whenever you see it, it's time for you to perform an action.
 
 
 Pre-requisites:
@@ -31,6 +31,8 @@ fn ls apps
 
 Create application
 ------------------
+  ![user input icon](https://raw.githubusercontent.com/arodri202/oci-rp-list-compartments/master/images/userinput.png)
+
   Get the python boilerplate by running:
   ```
   fn init --runtime python <function-name>
@@ -41,12 +43,13 @@ Create application
   ```
   Enter the directory, create a new __init__.py file so the directory can be recognized as a package by Python.
 
+  ![user input icon](https://raw.githubusercontent.com/arodri202/oci-rp-list-compartments/master/images/userinput.png)
   ```
   touch __init__.py
   ```
 
 ### Create an Application that is connected to Oracle Functions
-
+  ![user input icon](https://raw.githubusercontent.com/arodri202/oci-rp-list-compartments/master/images/userinput.png)
   ```
   fn create app <app-name> --annotation oracle.com/oci/subnetIds='["<subnet-ocid>"]'
   ```
@@ -61,6 +64,8 @@ Writing the Function
 ------------------
 ### Requirements
   Update your requirements.txt file to contain the following:
+
+  ![user input icon](https://raw.githubusercontent.com/arodri202/oci-rp-list-compartments/master/images/userinput.png)
   ```
   fdk
   oci-cli
@@ -68,6 +73,8 @@ Writing the Function
 
 ### Open func.py
   Update the imports so that you contain the following.
+
+  ![user input icon](https://raw.githubusercontent.com/arodri202/oci-rp-list-compartments/master/images/userinput.png)
   ```python
   import io
   import json
@@ -88,6 +95,8 @@ Writing the Function
 
 ### The Handler method
   This is what is called when the function is invoked by Oracle Functions, delete what is given from the boilerplate and update it to contain the following:
+
+  ![user input icon](https://raw.githubusercontent.com/arodri202/oci-rp-list-compartments/master/images/userinput.png)
   ```python
   def handler(ctx, data: io.BytesIO=None):
       provider = rp.ResourcePrincipalProvider() # initialized provider here
@@ -100,10 +109,14 @@ Writing the Function
 
 ### The do method
   Create the following method.
+
+  ![user input icon](https://raw.githubusercontent.com/arodri202/oci-rp-list-compartments/master/images/userinput.png)
   ```python
   def do(provider):
   ```
   This is where we'll put the bulk of our code that will connect to OCI and return the list of compartments in our tenancy.
+
+  ![user input icon](https://raw.githubusercontent.com/arodri202/oci-rp-list-compartments/master/images/userinput.png)
   ```python
     client = oci.identity.IdentityClient(provider.config, signer=provider.signer)
     # OCI API for managing users, groups, compartments, and policies.
@@ -128,6 +141,8 @@ Writing the Function
 
 ### Command Line Usage
   If you want to be able to invoke this function from the command line, copy and paste this at the bottom of your code.
+
+  ![user input icon](https://raw.githubusercontent.com/arodri202/oci-rp-list-compartments/master/images/userinput.png)
   ```python
   def main():
       # If run from the command-line, fake up the provider by using stock user credentials
@@ -143,7 +158,9 @@ Writing the Function
   ```
 Test
 ----
-### Deploy the function using
+### Deploy the function
+
+  ![user input icon](https://raw.githubusercontent.com/arodri202/oci-rp-list-compartments/master/images/userinput.png)
   ```
   fn -v deploy --app <your app name>
   ```
@@ -155,6 +172,8 @@ Test
   ```
 
 ### Invoke the function
+
+  ![user input icon](https://raw.githubusercontent.com/arodri202/oci-rp-list-compartments/master/images/userinput.png)
   ```
   fn invoke <your app name> <your function name>
   ```
