@@ -19,10 +19,10 @@ Pre-requisites:
   ```
   fn use context <your context name>
   ```
-Check using
-```
-fn ls apps
-```
+  Check using
+  ```
+  fn ls apps
+  ```
 
 ### (Optional) Have a config file in the ~/.oci directory
   If you would like to call the function from the command line you will need a valid config file.
@@ -41,7 +41,7 @@ Create application
   ```
   fn init --runtime python list-compartments
   ```
-  Enter the directory, create a new __init__.py file so the directory can be recognized as a package by Python.
+  Enter the directory, create a new `__init__.py` file so the directory can be recognized as a package by Python.
 
   ![user input icon](https://raw.githubusercontent.com/arodri202/oci-rp-list-compartments/master/images/userinput.png)
   ```
@@ -87,11 +87,7 @@ Writing the Function
   import rp
   ```
 
-  By calling
-  ```python
-  sys.path.append(".")
-  ```
-   the Python interpreter is able to import the rp.py Python module in your directory that you downloaded earlier.
+  By calling `sys.path.append(".")` the Python interpreter is able to import the rp.py Python module in your directory that you downloaded earlier.
 
 ### The Handler method
   This is what is called when the function is invoked by Oracle Functions, delete what is given from the boilerplate and update it to contain the following:
