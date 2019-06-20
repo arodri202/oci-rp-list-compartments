@@ -15,7 +15,7 @@ Pre-requisites:
 
   Have [Fn CLI setup with Oracle Functions](https://preview.oci.oraclecorp.com/iaas/Content/Functions/Tasks/functionsconfiguringclient.htm?tocpath=Services%7CFunctions%7CPreparing%20for%20Oracle%20Functions%7CConfiguring%20Your%20Client%20Environment%20for%20Function%20Development%7C_____0)
 
-### Switch to correct Context
+### Switch to the correct context
   ```
   fn use context <your context name>
   ```
@@ -31,9 +31,9 @@ fn ls apps
 
 Create application
 ------------------
-  ![user input icon](https://raw.githubusercontent.com/arodri202/oci-rp-list-compartments/master/images/userinput.png)
-
   Get the python boilerplate by running:
+
+  ![user input icon](https://raw.githubusercontent.com/arodri202/oci-rp-list-compartments/master/images/userinput.png)
   ```
   fn init --runtime python <function-name>
   ```
