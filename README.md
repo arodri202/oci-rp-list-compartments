@@ -4,6 +4,8 @@ This function uses Resource Principles to securely receive information about the
 
   Uses the [OCI Python SDK](https://oracle-cloud-infrastructure-python-sdk.readthedocs.io/en/latest/index.html) to create a client that receive user information when called in the OCI or a valid config file exists.
 
+  As you make your way through this tutorial, look out for this icon. ![user input icon]() Whenever you see it, it's time for you to perform an action.
+
 
 Pre-requisites:
 ---------------
