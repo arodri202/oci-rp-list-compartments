@@ -9,7 +9,7 @@ Pre-requisites:
 ---------------
   Start by making sure all of your policies are correct from this [guide](https://preview.oci.oraclecorp.com/iaas/Content/Functions/Tasks/functionscreatingpolicies.htm?tocpath=Services%7CFunctions%7CPreparing%20for%20Oracle%20Functions%7CConfiguring%20Your%20Tenancy%20for%20Function%20Development%7C_____4)
 
-  Download [rp.py](https://github.com/arodri202/oci-rp-list-compartments/blob/master/rp.py) and [functions_client.py](https://github.com/arodri202/oci-rp-list-compartments/blob/master/functions_client.py)
+  Download [rp.py](https://github.com/arodri202/oci-rp-list-compartments/blob/master/rp.py) and move it into your working directory.
 
   Have [Fn CLI setup with Oracle Functions](https://preview.oci.oraclecorp.com/iaas/Content/Functions/Tasks/functionsconfiguringclient.htm?tocpath=Services%7CFunctions%7CPreparing%20for%20Oracle%20Functions%7CConfiguring%20Your%20Client%20Environment%20for%20Function%20Development%7C_____0)
 
@@ -76,14 +76,13 @@ Writing the Function
   import oci.identity
   sys.path.append(".")
   import rp
-  import functions_client
   ```
 
   By calling
   ```python
   sys.path.append(".")
   ```
-   the Python interpreter is able to import the two Python modules (rp.py, functions_client) in your directory that you downloaded earlier.
+   the Python interpreter is able to import the rp.py Python module in your directory that you downloaded earlier.
 
 ### The Handler method
   This is what is called when the function is invoked by Oracle Functions, delete what is given from the boilerplate and update it to contain the following:

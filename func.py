@@ -8,7 +8,6 @@ import oci.identity
 
 sys.path.append(".")
 import rp
-import functions_client
 
 def handler(ctx, data: io.BytesIO=None):
     provider = rp.ResourcePrincipalProvider() # initialized provider here
