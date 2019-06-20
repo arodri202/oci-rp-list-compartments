@@ -1,4 +1,4 @@
-# Resource Principle function for returning the compartments of a User's Tenancy.
+# Resource Principal function for returning the compartments of a User's Tenancy.
 
 This function uses Resource Principles to securely receive information about the user's information from OCI and returns a list of all compartments within the tenancy regardless of region.
 
