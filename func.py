@@ -5,6 +5,7 @@ import importlib
 from fdk import response
 
 import oci.identity
+import oci.object_storage
 
 sys.path.append(".")
 import rp
