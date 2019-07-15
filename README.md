@@ -81,10 +81,10 @@ Writing the Function
   import io
   import json
   import sys
-  import importlib
-  from fdk import response
 
+  from fdk import response
   import oci.identity
+
   sys.path.append(".")
   import rp
   ```
@@ -97,7 +97,7 @@ Writing the Function
   ![user input icon](https://raw.githubusercontent.com/arodri202/oci-rp-list-compartments/master/images/userinput.png)
   ```python
   def handler(ctx, data: io.BytesIO=None):
-      provider = rp.ResourcePrincipalProvider() # initialized provider here
+      provider = rp.ResourcePrincipalProvider()
       resp = do(provider)
       return response.Response(
           ctx, response_data=json.dumps(resp),
@@ -124,7 +124,6 @@ Writing the Function
         compartments = client.list_compartments(provider.tenancy, compartment_id_in_subtree=True, access_level='ANY')
 
         # Create a list that holds a list of the compartments id and name next to each other.
-        # i.e. [ [1234, root], [5678, child]]
         compartments = [[c.id, c.name] for c in compartments.data]
     except Exception as e:
         compartments = str(e)

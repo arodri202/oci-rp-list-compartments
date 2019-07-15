@@ -1,17 +1,17 @@
+# Copyright (c) 2016, 2018, Oracle and/or its affiliates.  All rights reserved.
 import io
 import json
 import sys
-import importlib
-from fdk import response
 
+from fdk import response
 import oci.identity
-import oci.object_storage
 
 sys.path.append(".")
 import rp
 
+
 def handler(ctx, data: io.BytesIO=None):
-    provider = rp.ResourcePrincipalProvider() # initialized provider here
+    provider = rp.ResourcePrincipalProvider()
     resp = do(provider)
     return response.Response(
         ctx, response_data=json.dumps(resp),
@@ -19,9 +19,9 @@ def handler(ctx, data: io.BytesIO=None):
     )
 
 
-def do(provider):
+def do(signer):
     # List compartments --------------------------------------------------------------------------------
-    client = oci.identity.IdentityClient(provider.config, signer=provider.signer)
+    client = oci.identity.IdentityClient(config=provider.config, signer=provider.signer)
     # OCI API for managing users, groups, compartments, and policies.
 
     try:
@@ -29,7 +29,6 @@ def do(provider):
         compartments = client.list_compartments(provider.tenancy, compartment_id_in_subtree=True, access_level='ANY')
 
         # Create a list that holds a list of the compartments id and name next to each other.
-        # i.e. [ [1234, root], [5678, child]]
         compartments = [[c.id, c.name] for c in compartments.data]
     except Exception as e:
         compartments = str(e)
