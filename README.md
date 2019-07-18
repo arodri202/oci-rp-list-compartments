@@ -11,9 +11,7 @@ Pre-requisites:
 ---------------
   1. Start by making sure all of your policies are correct from this [guide](https://preview.oci.oraclecorp.com/iaas/Content/Functions/Tasks/functionscreatingpolicies.htm?tocpath=Services%7CFunctions%7CPreparing%20for%20Oracle%20Functions%7CConfiguring%20Your%20Tenancy%20for%20Function%20Development%7C_____4)
 
-  2. Download [rp.py](https://github.com/arodri202/oci-rp-list-compartments/blob/master/rp.py) and move it into your working directory.
-
-  3. Have [Fn CLI setup with Oracle Functions](https://preview.oci.oraclecorp.com/iaas/Content/Functions/Tasks/functionsconfiguringclient.htm?tocpath=Services%7CFunctions%7CPreparing%20for%20Oracle%20Functions%7CConfiguring%20Your%20Client%20Environment%20for%20Function%20Development%7C_____0)
+  2. Have [Fn CLI setup with Oracle Functions](https://preview.oci.oraclecorp.com/iaas/Content/Functions/Tasks/functionsconfiguringclient.htm?tocpath=Services%7CFunctions%7CPreparing%20for%20Oracle%20Functions%7CConfiguring%20Your%20Client%20Environment%20for%20Function%20Development%7C_____0)
 
 ### Switch to the correct context
   ![user input icon](https://raw.githubusercontent.com/arodri202/oci-rp-list-compartments/master/images/userinput.png)
@@ -80,16 +78,10 @@ Writing the Function
   ```python
   import io
   import json
-  import sys
 
   from fdk import response
   import oci.identity
-
-  sys.path.append(".")
-  import rp
   ```
-
-  By calling `sys.path.append(".")` the Python interpreter is able to import the rp.py Python module in your directory that you downloaded earlier.
 
 ### The Handler method
   This is what is called when the function is invoked by Oracle Functions, delete what is given from the boilerplate and update it to contain the following:
@@ -97,60 +89,47 @@ Writing the Function
   ![user input icon](https://raw.githubusercontent.com/arodri202/oci-rp-list-compartments/master/images/userinput.png)
   ```python
   def handler(ctx, data: io.BytesIO=None):
-      provider = rp.ResourcePrincipalProvider()
-      resp = do(provider)
+      signer = oci.auth.signers.get_resource_principals_signer()
+      resp = do(signer)
       return response.Response(
           ctx, response_data=json.dumps(resp),
           headers={"Content-Type": "application/json"}
       )
   ```
+  The line `signer = oci.auth.signers.get_resource_principals_signer()` gives us the configuration information of the calling tenancy and compartment which will allow us to gain access to any service in OCI.
 
 ### The do method
   Create the following method.
 
   ![user input icon](https://raw.githubusercontent.com/arodri202/oci-rp-list-compartments/master/images/userinput.png)
   ```python
-  def do(provider):
+  def do(signer):
   ```
   This is where we'll put the bulk of our code that will connect to OCI and return the list of compartments in our tenancy.
 
   ![user input icon](https://raw.githubusercontent.com/arodri202/oci-rp-list-compartments/master/images/userinput.png)
   ```python
-    client = oci.identity.IdentityClient(provider.config, signer=provider.signer)
-    # OCI API for managing users, groups, compartments, and policies.
 
-    try:
-        # Returns a list of all compartments and subcompartments in the tenancy (root compartment)
-        compartments = client.list_compartments(provider.tenancy, compartment_id_in_subtree=True, access_level='ANY')
+      # List compartments --------------------------------------------------------------------------------
+      client = oci.identity.IdentityClient(config={}, signer=signer)
+      # OCI API for managing users, groups, compartments, and policies.
 
-        # Create a list that holds a list of the compartments id and name next to each other.
-        compartments = [[c.id, c.name] for c in compartments.data]
-    except Exception as e:
-        compartments = str(e)
+      try:
+          # Returns a list of all compartments and subcompartments in the tenancy (root compartment)
+          compartments = client.list_compartments(signer.tenancy_id, compartment_id_in_subtree=True, access_level='ANY')
 
-    resp = {
-             "compartments": compartments,
-            }
+          # Create a list that holds a list of the compartments id and name next to each other.
+          compartments = [[c.id, c.name] for c in compartments.data]
+      except Exception as e:
+          compartments = str(e)
 
-    return resp
+      resp = {
+               "compartments": compartments,
+              }
+
+      return resp
   ```
-  Here we are creating an [IdentityClient](https://oracle-cloud-infrastructure-python-sdk.readthedocs.io/en/latest/api/identity/client/oci.identity.IdentityClient.html) from the [OCI Python SDK](https://oracle-cloud-infrastructure-python-sdk.readthedocs.io/en/latest/index.html), which allows us to connect to OCI with the provider's data we get from Resource Principles and it allows us to make a call to identity services for information on our compartments.
-
-### Command Line Usage
-  If you want to be able to invoke this function from the command line, copy and paste this at the bottom of your code.
-
-  ![user input icon](https://raw.githubusercontent.com/arodri202/oci-rp-list-compartments/master/images/userinput.png)
-  ```python
-  def main():
-      # If run from the command-line, fake up the provider by using stock user credentials
-      provider = rp.MockResourcePrincipalProvider()
-      resp = do(provider)
-      print((resp))
-      print(json.dumps(resp))
-
-
-  if __name__ == '__main__':
-      main()
+  Here we are creating an [IdentityClient](https://oracle-cloud-infrastructure-python-sdk.readthedocs.io/en/latest/api/identity/client/oci.identity.IdentityClient.html) from the [OCI Python SDK](https://oracle-cloud-infrastructure-python-sdk.readthedocs.io/en/latest/index.html), which allows us to connect to OCI with the resource principal's signer data, since resource principal is already pre-configured we do not need to pass in a valid config dictionary, we are now able to make a call to identity services for information on our compartments.
 
   ```
 Test
