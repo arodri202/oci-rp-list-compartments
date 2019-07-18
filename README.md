@@ -23,11 +23,6 @@ Pre-requisites:
   fn ls apps
   ```
 
-### (Optional) Have a config file in the ~/.oci directory
-  If you would like to call the function from the command line you will need a valid config file.
-
-  If you do not have one, go [here](https://preview.oci.oraclecorp.com/iaas/Content/Functions/Tasks/functionsconfigureocicli.htm?tocpath=Services%7CFunctions%7CPreparing%20for%20Oracle%20Functions%7CConfiguring%20Your%20Client%20Environment%20for%20Function%20Development%7C_____2)
-
 Create application
 ------------------
   Get the python boilerplate by running:
@@ -131,7 +126,6 @@ Writing the Function
   ```
   Here we are creating an [IdentityClient](https://oracle-cloud-infrastructure-python-sdk.readthedocs.io/en/latest/api/identity/client/oci.identity.IdentityClient.html) from the [OCI Python SDK](https://oracle-cloud-infrastructure-python-sdk.readthedocs.io/en/latest/index.html), which allows us to connect to OCI with the resource principal's signer data, since resource principal is already pre-configured we do not need to pass in a valid config dictionary, we are now able to make a call to identity services for information on our compartments.
 
-  ```
 Test
 ----
 ### Deploy the function
