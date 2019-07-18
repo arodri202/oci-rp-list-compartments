@@ -64,6 +64,7 @@ Writing the Function
   ```
   fdk
   oci-cli
+  oci>=2.2.18
   ```
 
 ### Open func.py
